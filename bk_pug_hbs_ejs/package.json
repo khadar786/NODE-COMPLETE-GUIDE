@@ -1,0 +1,23 @@
+{
+  "name": "node-complete-guide",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "server-start": "node app.js"
+  },
+  "author": "khadar basha",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.4",
+    "pug": "^3.0.2"
+  }
+}
