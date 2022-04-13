@@ -3,9 +3,9 @@ const express=require('express');
 const bodyParser=require('body-parser');
 //const { engine }=require('express-handlebars');
 
-const adminData=require('./routes/admin');
+const adminRoutes=require('./routes/admin');
 const shopRoutes=require('./routes/shop');
-
+const errorController=require('./controllers/error');
 const app=express();
 
 /* app.engine('hbs',engine({
@@ -22,13 +22,10 @@ app.set('views','views');
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/admin',adminData.routes);
+app.use('/admin',adminRoutes);
 app.use(shopRoutes);
 
 
-app.use((req, res, next) => {
-  //res.status(404).sendFile(path.join(__dirname,'views','404.html'));
-  res.status(404).render('404',{pageTitle:"404 Page Not Found",path:""})
-});
+app.use(errorController.get404Page);
 
 app.listen(3000);
