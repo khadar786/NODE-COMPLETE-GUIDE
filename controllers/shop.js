@@ -5,8 +5,8 @@ exports.getProducts=(req,res,next)=>{
         res.render('shop/product-list',
         {
             prods:products,
-            pageTitle:'Shop',
-            path:'/',
+            pageTitle:'Products',
+            path:'/products',
             hasProducts:products.length>0,
             productCss:true,
             activeShop:true

@@ -6,7 +6,12 @@ exports.getAddProduct=(req,res,next)=>{
 
 exports.postAddProduct=(req,res,next)=>{
     let formData=JSON.parse(JSON.stringify(req.body));
-    const product=new Product(formData.title);
+    const title=formData.title;
+    const imageUrl=formData.imageUrl;
+    const price=formData.price;
+    const description=formData.description;
+
+    const product=new Product(title,imageUrl,price,description);
     product.save();
     res.redirect('/');
 };
