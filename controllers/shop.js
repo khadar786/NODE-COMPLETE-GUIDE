@@ -1,3 +1,4 @@
+const { redirect } = require('express/lib/response');
 const Product=require('../models/product');
 
 exports.getProducts=(req,res,next)=>{
@@ -10,6 +11,19 @@ exports.getProducts=(req,res,next)=>{
             hasProducts:products.length>0,
             productCss:true,
             activeShop:true
+        });
+    });
+    
+};
+
+exports.getProduct=(req,res,next)=>{
+    const productId=req.params.productId;
+   //console.log(productId);
+    Product.findById(productId,product=>{
+        res.render('shop/product-detail',{
+            product:product,
+            pageTitle:product.title,
+            path:'/products',
         });
     });
     
@@ -35,6 +49,12 @@ exports.getCart=(req,res,next)=>{
         pageTitle:'Your Cart',
         path:'/cart'
     });
+}
+
+exports.postCart=(req,res,next)=>{
+    const prodId=req.body.productId;
+    console.log(prodId);
+    res.redirect('/cart');
 }
 
 exports.getCheckout=(req,res,next)=>{

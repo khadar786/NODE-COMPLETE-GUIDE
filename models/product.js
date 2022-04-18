@@ -22,6 +22,7 @@ module.exports=class Product{
     }
 
     save(){
+        this.id=Math.random().toString();
         geProductsFromFile(products=>{
             products.push(this);
             fs.writeFile(p,JSON.stringify(products),(error)=>{
@@ -32,5 +33,13 @@ module.exports=class Product{
 
     static fetchAll(cb){
         geProductsFromFile(cb);
+    }
+
+    static findById(id,cb){
+        geProductsFromFile(products=>{
+            const product=products.find(p=>p.id === id);
+            console.log(product);
+            cb(product);
+        });
     }
 }
