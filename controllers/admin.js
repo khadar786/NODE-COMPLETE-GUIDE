@@ -17,7 +17,7 @@ exports.postAddProduct=(req,res,next)=>{
     const price=formData.price;
     const description=formData.description;
 
-    const product=new Product(title,imageUrl,description,price);
+    const product=new Product(null,title,imageUrl,description,price);
     product.save();
     res.redirect('/');
 };
@@ -35,6 +35,8 @@ exports.getEditProduct=(req,res,next)=>{
             return res.redirect("/");
         }
 
+        product.price=product.price.trim();
+        console.log(product.price);
         res.render('admin/edit-product',
             {
                 pageTitle:'Edit Product',
@@ -45,6 +47,17 @@ exports.getEditProduct=(req,res,next)=>{
         );
     });
     
+};
+
+exports.postEditProduct=(req,res,next)=>{
+    const prodId=req.body.productId;
+    const updatedTilte=req.body.title;
+    const updatedPrice=req.body.price;
+    const updatedImageUrl=req.body.imageUrl;
+    const updatedDesc=req.body.description;
+    const updatedProduct=new Product(prodId,updatedTilte,updatedPrice,updatedImageUrl,updatedDesc);
+    updatedProduct.save();
+    res.redirect("/admin/products");
 };
 
 exports.getProducts=(req,res,next)=>{
