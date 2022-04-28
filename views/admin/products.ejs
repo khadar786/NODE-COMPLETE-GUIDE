@@ -1,4 +1,5 @@
 <%- include('../includes/head.ejs')%>
+<link rel="stylesheet" href="/css/product.css">
 </head>
 
 <body>
@@ -22,6 +23,10 @@
                   <div class="card__actions">
                       <a href="/admin/edit-product/<%= product.id %>?edit=true" class="btn">Edit</a>
                       <%- include('../includes/add-to-cart.ejs',{product:product}) %>
+                      <form action="/admin/delete-product" method="POST">
+                        <input type="hidden" value="<%=product.id%>" name="productId"/>
+                        <button class="btn" type="submit">Delete</button>
+                      </form>
                   </div>
               </article>
             <% }%>

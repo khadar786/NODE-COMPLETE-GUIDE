@@ -43,6 +43,18 @@ module.exports=class Product{
         });
     }
 
+    static deleteById(id){
+        geProductsFromFile(products=>{
+            const updatedProducts=products.filter(prod=>prod.id !== id);
+            console.log(product);
+            fs.writeFile(p,JSON.stringify(updatedProducts),(error)=>{
+                if(!error){
+
+                }
+            });
+        });
+    }
+
     static fetchAll(cb){
         geProductsFromFile(cb);
     }

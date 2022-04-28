@@ -55,7 +55,7 @@ exports.postEditProduct=(req,res,next)=>{
     const updatedPrice=req.body.price;
     const updatedImageUrl=req.body.imageUrl;
     const updatedDesc=req.body.description;
-    const updatedProduct=new Product(prodId,updatedTilte,updatedPrice,updatedImageUrl,updatedDesc);
+    const updatedProduct=new Product(prodId,updatedTilte,updatedImageUrl,updatedDesc,updatedPrice);
     updatedProduct.save();
     res.redirect("/admin/products");
 };
@@ -72,4 +72,8 @@ exports.getProducts=(req,res,next)=>{
             activeShop:true
         });
     });
+};
+
+exports.postDeleteProduct=(req,res,next)=>{
+
 };
