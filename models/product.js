@@ -1,20 +1,5 @@
-const fs=require('fs');
-const path=require('path');
-
+const db=require('../util/database');
 const Cart=require('./cart');
-
-//const products=[];
-const p=path.join(path.dirname(require.main.filename),'data','products.json');
-
-const geProductsFromFile=(cb)=>{
-    fs.readFile(p,(err,fileContent)=>{
-        if(err){
-            cb([]);
-        }else{
-            cb(JSON.parse(fileContent));
-        }
-    });
-}
 
 module.exports=class Product{
     constructor(id,title,imageUrl,description,price){
@@ -26,49 +11,19 @@ module.exports=class Product{
     }
 
     save(){
-        
-        geProductsFromFile(products=>{
-            if(this.id){
-                const existingProductIndex=products.findIndex(prod=>prod.id===this.id);
-                const updatedProducts=[...products];
-                updatedProducts[existingProductIndex]=this;
-                fs.writeFile(p,JSON.stringify(updatedProducts),(error)=>{
-                    console.log(error);
-                });
-            }else{
-                this.id=Math.random().toString();
-                products.push(this);
-                fs.writeFile(p,JSON.stringify(products),(error)=>{
-                    console.log(error);
-                });
-            }
-            
-        });
+        return db.execute('INSERT INTO products(title,price,imageUrl,description)VALUES(?,?,?,?)',[this.title,this.price,this.imageUrl,this.description]);
     }
 
     static deleteById(id){
-        geProductsFromFile(products=>{
-            const product=products.find(prod=>prod.id === id);
-            const updatedProducts=products.filter(prod=>prod.id !== id);
-            console.log(product);
-            fs.writeFile(p,JSON.stringify(updatedProducts),(error)=>{
-                if(!error){
-                    Cart.deleteProduct(id,product.price)
-                }
-            });
-        });
+        db.execute('DELETE FROM products WHERE id='+id);
     }
 
-    static fetchAll(cb){
-        geProductsFromFile(cb);
+    static fetchAll(){
+       return db.execute("SELECT * FROM products");
     }
 
-    static findById(id,cb){
-        geProductsFromFile(products=>{
-            const product=products.find(p=>p.id === id);
-            console.log(product);
-            cb(product);
-        });
+    static findById(id){
+        return db.execute("SELECT * FROM products WHERE products.id=?",[id]);
     }
 
 }

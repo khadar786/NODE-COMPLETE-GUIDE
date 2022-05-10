@@ -18,13 +18,8 @@ exports.postAddProduct=(req,res,next)=>{
     const description=formData.description;
 
     const product=new Product(null,title,imageUrl,description,price);
-    product.save()
-    .then(()=>{
-        res.redirect('/');
-    })
-    .catch(err=>{
-        console.log(err);
-    });
+    product.save();
+    res.redirect('/');
 };
 
 exports.getEditProduct=(req,res,next)=>{
@@ -66,20 +61,16 @@ exports.postEditProduct=(req,res,next)=>{
 };
 
 exports.getProducts=(req,res,next)=>{
-    Product.fetchAll()
-    .then(([rows,fieldData])=>{
+    Product.fetchAll((products)=>{
         res.render('admin/products',
         {
-            prods:rows,
+            prods:products,
             pageTitle:'Admin Products',
             path:'/admin/products',
-            hasProducts:rows.length>0,
+            hasProducts:products.length>0,
             productCss:true,
             activeShop:true
         });
-    })
-    .catch(error=>{
-        console.log(error);
     });
 };
 
