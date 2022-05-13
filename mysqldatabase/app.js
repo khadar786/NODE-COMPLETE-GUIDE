@@ -6,7 +6,7 @@ const bodyParser=require('body-parser');
 const adminRoutes=require('./routes/admin');
 const shopRoutes=require('./routes/shop');
 const errorController=require('./controllers/error');
-const sequelize=require('./util/database');
+const db=require('./util/database');
 const app=express();
 
 /* app.engine('hbs',engine({
@@ -35,10 +35,4 @@ app.use(shopRoutes);
 
 app.use(errorController.get404Page);
 
-sequelize.sync()
-.then(result=>{
-  //console.log(result);
-  app.listen(3000);
-}).catch(err=>{
-  console.log(err);
-});
+app.listen(3000);

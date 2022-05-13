@@ -17,15 +17,13 @@ exports.postAddProduct=(req,res,next)=>{
     const price=formData.price;
     const description=formData.description;
 
-    Product.create({
-        title:title,
-        price:price,
-        imageUrl:imageUrl,
-        description:description
-    }).then(result=>{
+    const product=new Product(null,title,imageUrl,description,price);
+    product.save()
+    .then(()=>{
         res.redirect('/');
-    }).catch(err=>{
-
+    })
+    .catch(err=>{
+        console.log(err);
     });
 };
 
@@ -37,9 +35,7 @@ exports.getEditProduct=(req,res,next)=>{
     }
 
     const prodId=req.params.productId;
-    Product.findByPk(prodId)
-    .then(product=>{
-        //console.log(product.price);
+    Product.findById(prodId,product=>{
         if(!product){
             return res.redirect("/");
         }
@@ -54,10 +50,8 @@ exports.getEditProduct=(req,res,next)=>{
                 product:product
             }
         );
-    })
-    .catch(error=>{
-
-    });    
+    });
+    
 };
 
 exports.postEditProduct=(req,res,next)=>{
@@ -72,14 +66,14 @@ exports.postEditProduct=(req,res,next)=>{
 };
 
 exports.getProducts=(req,res,next)=>{
-    Product.findAll()
-    .then(products=>{
+    Product.fetchAll()
+    .then(([rows,fieldData])=>{
         res.render('admin/products',
         {
-            prods:products,
+            prods:rows,
             pageTitle:'Admin Products',
             path:'/admin/products',
-            hasProducts:products.length>0,
+            hasProducts:rows.length>0,
             productCss:true,
             activeShop:true
         });

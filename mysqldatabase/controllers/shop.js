@@ -3,31 +3,31 @@ const Product=require('../models/product');
 const Cart=require('../models/cart');
 
 exports.getProducts=(req,res,next)=>{
-    Product.findAll()
-    .then(products=>{
+    Product.fetchAll()
+    .then(([rows,fieldData])=>{
         res.render('shop/product-list',
         {
-            prods:products,
+            prods:rows,
             pageTitle:'Products',
             path:'/products',
-            hasProducts:products.length>0,
+            hasProducts:rows.length>0,
             productCss:true,
             activeShop:true
         });
-    }).catch(error=>{
-
-    });
+    })
+    .catch(err=>console.log(err));
+    
 };
 
 exports.getProduct=(req,res,next)=>{
     const productId=req.params.productId;
    //console.log(productId);
-    Product.findByPk(productId)
-    .then(product=>{
+    Product.findById(productId)
+    .then(([product])=>{
         //console.log(product);
         res.render('shop/product-detail',{
-            product:product,
-            pageTitle:product.title,
+            product:product[0],
+            pageTitle:product[0].title,
             path:'/products',
         });
     })
@@ -38,21 +38,23 @@ exports.getProduct=(req,res,next)=>{
 };
 
 exports.getIndex=(req,res,next)=>{
-    Product.findAll()
-    .then(products=>{
+    Product.fetchAll()
+    .then(([rows,fieldData])=>{
         res.render('shop/index',
         {
-            prods:products,
+            prods:rows,
             pageTitle:'Shop',
             path:'/',
-            hasProducts:products.length>0,
+            hasProducts:rows.length>0,
             productCss:true,
             activeShop:true
         });
     })
     .catch(err=>{
-
+        console.log(err);
     });
+    
+    
 };
 
 exports.getCart=(req,res,next)=>{
