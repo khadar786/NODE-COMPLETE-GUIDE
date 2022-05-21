@@ -43,9 +43,9 @@ exports.getEditProduct=(req,res,next)=>{
         if(!product){
             return res.redirect("/");
         }
-
-        product.price=product.price.trim();
-        console.log(product.price);
+        //console.log(product.price);
+        //product.price=product.price.trim();
+        //console.log(product.price);
         res.render('admin/edit-product',
             {
                 pageTitle:'Edit Product',
@@ -56,9 +56,10 @@ exports.getEditProduct=(req,res,next)=>{
         );
     })
     .catch(error=>{
-
+        console.log(error);
     });    
 };
+
 
 exports.postEditProduct=(req,res,next)=>{
     const prodId=req.body.productId;
@@ -66,9 +67,21 @@ exports.postEditProduct=(req,res,next)=>{
     const updatedPrice=req.body.price;
     const updatedImageUrl=req.body.imageUrl;
     const updatedDesc=req.body.description;
-    const updatedProduct=new Product(prodId,updatedTilte,updatedImageUrl,updatedDesc,updatedPrice);
-    updatedProduct.save();
-    res.redirect("/admin/products");
+    Product.findByPk(prodId)
+    .then(product=>{
+        product.title=updatedTilte;
+        product.price=updatedPrice;
+        product.description=updatedDesc;
+        product.imageUrl=updatedImageUrl;
+        return product.save();
+    })
+    .then(result=>{
+        console.log("Product updated");
+        res.redirect("/admin/products");
+    })
+    .catch(error=>{
+        console.log(error);
+    });
 };
 
 exports.getProducts=(req,res,next)=>{
@@ -91,7 +104,14 @@ exports.getProducts=(req,res,next)=>{
 
 exports.postDeleteProduct=(req,res,next)=>{
     const prodId=req.body.productId;
-    Product.deleteById(prodId);
+    Product.findByPk(prodId)
+    .then(product=>{
+        return product.destroy();
+    })
+    .then(result=>{
+        res.redirect('/admin/products');
+    })
+    .catch(error=>{
 
-    res.redirect('/admin/products');
+    });
 };
