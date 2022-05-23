@@ -17,16 +17,30 @@ exports.postAddProduct=(req,res,next)=>{
     const price=formData.price;
     const description=formData.description;
 
-    Product.create({
+    req.user.createProduct
+    ({
         title:title,
         price:price,
         imageUrl:imageUrl,
         description:description
-    }).then(result=>{
+    })
+    .then(result=>{
         res.redirect('/');
     }).catch(err=>{
 
     });
+
+    /* Product.create({
+        title:title,
+        price:price,
+        imageUrl:imageUrl,
+        description:description,
+        userId:req.user.id
+    }).then(result=>{
+        res.redirect('/');
+    }).catch(err=>{
+
+    }); */
 };
 
 exports.getEditProduct=(req,res,next)=>{
@@ -37,7 +51,30 @@ exports.getEditProduct=(req,res,next)=>{
     }
 
     const prodId=req.params.productId;
-    Product.findByPk(prodId)
+    req.user.getProducts({where:{id:productId}})
+    .then(products=>{
+        const product=products[0];
+        //console.log(product.price);
+        if(!product){
+            return res.redirect("/");
+        }
+        //console.log(product.price);
+        //product.price=product.price.trim();
+        //console.log(product.price);
+        res.render('admin/edit-product',
+            {
+                pageTitle:'Edit Product',
+                path:'/admin/edit-product',
+                editing:editMode,
+                product:product
+            }
+        );
+    })
+    .catch(error=>{
+        console.log(error);
+    }); 
+
+    /* Product.findByPk(prodId)
     .then(product=>{
         //console.log(product.price);
         if(!product){
@@ -57,7 +94,7 @@ exports.getEditProduct=(req,res,next)=>{
     })
     .catch(error=>{
         console.log(error);
-    });    
+    });  */   
 };
 
 
@@ -85,7 +122,7 @@ exports.postEditProduct=(req,res,next)=>{
 };
 
 exports.getProducts=(req,res,next)=>{
-    Product.findAll()
+    req.user.getProducts()
     .then(products=>{
         res.render('admin/products',
         {
@@ -100,6 +137,21 @@ exports.getProducts=(req,res,next)=>{
     .catch(error=>{
         console.log(error);
     });
+    /* Product.findAll()
+    .then(products=>{
+        res.render('admin/products',
+        {
+            prods:products,
+            pageTitle:'Admin Products',
+            path:'/admin/products',
+            hasProducts:products.length>0,
+            productCss:true,
+            activeShop:true
+        });
+    })
+    .catch(error=>{
+        console.log(error);
+    }); */
 };
 
 exports.postDeleteProduct=(req,res,next)=>{

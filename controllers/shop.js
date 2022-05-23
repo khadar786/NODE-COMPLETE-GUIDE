@@ -1,6 +1,7 @@
 //const { redirect } = require('express/lib/response');
 const Product=require('../models/product');
 const Cart=require('../models/cart');
+const User = require('../models/user');
 
 exports.getProducts=(req,res,next)=>{
     Product.findAll()
@@ -38,7 +39,7 @@ exports.getProduct=(req,res,next)=>{
 };
 
 exports.getIndex=(req,res,next)=>{
-    Product.findAll()
+    req.user.getProducts()
     .then(products=>{
         res.render('shop/index',
         {
@@ -53,6 +54,22 @@ exports.getIndex=(req,res,next)=>{
     .catch(err=>{
 
     });
+
+    /* Product.findAll()
+    .then(products=>{
+        res.render('shop/index',
+        {
+            prods:products,
+            pageTitle:'Shop',
+            path:'/',
+            hasProducts:products.length>0,
+            productCss:true,
+            activeShop:true
+        });
+    })
+    .catch(err=>{
+
+    }); */
 };
 
 exports.getCart=(req,res,next)=>{
