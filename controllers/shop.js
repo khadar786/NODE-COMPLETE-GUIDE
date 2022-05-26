@@ -73,7 +73,24 @@ exports.getIndex=(req,res,next)=>{
 };
 
 exports.getCart=(req,res,next)=>{
-    Cart.getCart(cart=>{
+    req.user.getCart()
+    .then(cart=>{
+        return cart.getProducts()
+        .then(products=>{
+            res.render('shop/cart',{
+                pageTitle:'Your Cart',
+                path:'/cart',
+                products:products
+            });
+        })
+        .catch(error=>{
+            console.log(error);
+        });
+    })
+    .catch(error=>{
+        console.log(error);
+    });
+    /* Cart.getCart(cart=>{
         Product.fetchAll(products=>{
             const cartProducts=[];
             for (product of products) {
@@ -89,7 +106,7 @@ exports.getCart=(req,res,next)=>{
                 products:cartProducts
             });
         });
-    });
+    }); */
     
 }
 
