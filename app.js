@@ -66,9 +66,11 @@ sequelize
   if(!user){
     return User.create({name:'khadar',email:'khadar@gmail.com'});
   }
-
+  
   return user;
 }).then(user=>{
+  return user.createCart();
+}).then(cart=>{
   app.listen(3000);
 })
 .catch(err=>{
