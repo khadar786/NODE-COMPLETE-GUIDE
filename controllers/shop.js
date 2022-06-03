@@ -156,9 +156,38 @@ exports.getCheckout=(req,res,next)=>{
 
 exports.postCartDeleteProduct=(req,res,next)=>{
     const prodId=req.body.productId;
-    console.log(prodId);
-    Product.findById(prodId,product=>{
-        Cart.deleteProduct(prodId,product.price);
+    req.user.getCart()
+    .then(cart=>{
+        return cart.getProducts({where:{id:prodId}});
+    }).then(products=>{
+        const product=products[0];
+        return product.cartItem.destroy();
+    }).then(result=>{
         res.redirect('/cart');
+    })
+    .catch(error=>{
+        console.log(error);
+    });
+};
+
+exports.postOrder=(req,res,next)=>{
+    req.user.getCart()
+    .then(cart=>{
+        return cart.getProducts();
+    })
+    .then(products=>{
+        return  req.user.createOrder()
+                .then(order=>{
+                    order.addProducts(products.map(product=>{
+                        product.orderItem={quantity:product.cartItem.quantity};
+                        return product;
+                    }));
+                });
+        console.log(products);
+    }).then(result=>{
+        res.redirect('/orders');
+    })
+    .catch(err=>{
+        console.log(err);
     });
 };
