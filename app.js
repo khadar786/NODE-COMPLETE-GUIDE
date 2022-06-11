@@ -4,6 +4,9 @@ const bodyParser=require('body-parser');
 //const { engine }=require('express-handlebars');
 const session=require('express-session');
 
+var mysql2 = require('mysql2/promise');
+var MySQLStore = require('express-mysql-session')(session);
+
 const adminRoutes=require('./routes/admin');
 const shopRoutes=require('./routes/shop');
 const authRoutes=require('./routes/auth');
@@ -16,6 +19,17 @@ const CartItem=require('./models/cart-item');
 const Order=require('./models/order');
 const OrderItem=require('./models/order-item');
 const app=express();
+
+var options = {
+	host: 'localhost',
+	port: 3306,
+	user: 'root',
+	password: '',
+	database: 'node-complete'
+};
+
+var connection = mysql2.createPool(options);
+var sessionStore = new MySQLStore({}, connection);
 
 /* app.engine('hbs',engine({
   extname: 'hbs',
@@ -36,7 +50,12 @@ app.set('views','views');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret:'my secret',resave:false,saveUninitialized:true}));
+app.use(session({
+         secret:'my secret',
+         resave:false,
+         store:sessionStore,
+         saveUninitialized:true
+        }));
 
 app.use((req,res,next)=>{
   User.findByPk(1)
