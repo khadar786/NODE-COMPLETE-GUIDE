@@ -6,7 +6,8 @@ exports.getAddProduct=(req,res,next)=>{
         path:'/admin/add-product',
         formCss:true,
         activeAddProduct:true,
-        editing:false
+        editing:false,
+        isAuthenticated:req.session.isLoggedIn
     });
 };
 
@@ -66,7 +67,8 @@ exports.getEditProduct=(req,res,next)=>{
                 pageTitle:'Edit Product',
                 path:'/admin/edit-product',
                 editing:editMode,
-                product:product
+                product:product,
+                isAuthenticated:req.session.isLoggedIn
             }
         );
     })
@@ -131,7 +133,8 @@ exports.getProducts=(req,res,next)=>{
             path:'/admin/products',
             hasProducts:products.length>0,
             productCss:true,
-            activeShop:true
+            activeShop:true,
+            isAuthenticated:req.session.isLoggedIn
         });
     })
     .catch(error=>{
